@@ -1,0 +1,17 @@
+# Ignore Python __pycache__ directories
+*.pyc
+__pycache__/
+
+# Ignore individual __init__.py files
+**/__init__.py
+
+# Ignore SQLite database file
+db.sqlite3
+
+# Ignore Django migrations
+/migrations/
+
+# Ignore virtual environment
+venv/
+
+.DS_Store
