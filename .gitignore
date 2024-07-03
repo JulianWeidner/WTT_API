@@ -10,8 +10,8 @@ db.sqlite3
 
 # Ignore Django migrations
 /migrations/
-api/migrations/
-
+api/migrations/*.py
+.gitignore
 # Ignore virtual environment
 venv/
 

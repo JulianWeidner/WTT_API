@@ -7,15 +7,20 @@ from selenium.webdriver.support.ui import WebDriverWait
 import os
 import sys
 import django
+from datetime import datetime
+import time
 
 sys.path.append('/Users/julianweidner/Development/DRF/wtt_api')
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'wtt_api.settings')
 django.setup()
 
 from api.models import Tournament
+from django.utils.dateparse import parse_datetime
+from django.utils.timezone import make_aware
+
 
 #from tournament import Tournament, TournamentDetail
-import time
+
 
 #create driver/browser open page
 def setup_driver():
@@ -64,6 +69,13 @@ def get_active_tournaments(driver):
     #figure out a proper return
     return (active_tournaments)
 
+def datetime_converter(raw_datetime_text): # raw input = 'Jul 3, 24, 13:50 UTC - Jul 3, 24, 15:24 UTC'
+     datetime_format = '%b %d, %y, %H:%M %Z' 
+     cleaned_dt = [dt.strip() for dt in raw_datetime_text.split('-')]    #Ex. ['Jul 3, 24, 13:50 UTC', 'Jul 3, 24, 15:24 UTC']
+    
+     dt_model_rdy = [make_aware(datetime.strptime(dt, datetime_format)) for dt in cleaned_dt]
+     return dt_model_rdy
+
 
 def create_tournament_obj(tournament_card):
 
@@ -74,6 +86,9 @@ def create_tournament_obj(tournament_card):
         start_time = models.DateTimeField()
         end_time = models.DateTimeField()
     """
+    tournament_date = tournament_card.find_element(By.CSS_SELECTOR, "p[card-name='dayTournament']").text
+    t_start, t_end = datetime_converter(tournament_date) #yay dt conversions!
+
 
 
     data = {
@@ -83,10 +98,12 @@ def create_tournament_obj(tournament_card):
         #'battle_mode': tournament_card.find_element(By.CSS_SELECTOR, "span[card-name='gameMode']").text,
         #'tournament_type': tournament_card.find_element(By.CSS_SELECTOR, "span[card-name='typeTournament']").text,
         #'region': tournament_card.find_element(By.CSS_SELECTOR, "span[card-name='clusterTournament']").text,
-        #'tournament_date': tournament_card.find_element(By.CSS_SELECTOR, "p[card-name='dayTournament']").text,
+        
+        'start_time': t_start,
+        'end_time': t_end,
         'detail_id': detail_id
     }
-
+#{'name': 'AB Tanks1x1', 'team_size': '1x1', 'registrations': '16/128', 'battle_mode': 'AB', 'tournament_type': 'SE', 'region': 'EU', 'tournament_date': 'Jul 3, 24, 13:50 UTC - Jul 3, 24, 15:24 UTC', 'detail_id': '20024'}
     return Tournament(**data)
 
 def get_tournament_details(sub_driver, tournament):
@@ -149,6 +166,7 @@ def main():
     print('Creating Tournament Objects (printed from main)')
     for tournament in active_tournaments:
         #sub_driver = setup_driver()
+        tournament
         tourn_obj = create_tournament_obj(tournament)
         tourn_obj.save()
         #tourn_detail_elements = get_tournament_details(sub_driver, tourn_obj)
