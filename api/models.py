@@ -3,6 +3,7 @@ from django.db import models
 # Create your models here.
 class Tournament(models.Model):
     name = models.CharField(max_length=300)
+    category = models.CharField(max_length=50)
     region = models.CharField(max_length=5)
     battle_mode = models.CharField(max_length=5)
     team_size = models.CharField(max_length=6)

@@ -69,37 +69,57 @@ def get_active_tournaments(driver):
     #figure out a proper return
     return (active_tournaments)
 
+
+#the dates are just plaintext.. 
 def datetime_converter(raw_datetime_text): # raw input = 'Jul 3, 24, 13:50 UTC - Jul 3, 24, 15:24 UTC'
      datetime_format = '%b %d, %y, %H:%M %Z' 
      cleaned_dt = [dt.strip() for dt in raw_datetime_text.split('-')]    #Ex. ['Jul 3, 24, 13:50 UTC', 'Jul 3, 24, 15:24 UTC']
      dt_model_rdy = [make_aware(datetime.strptime(dt, datetime_format)) for dt in cleaned_dt] #make aware adds TZ info to the object 
      return dt_model_rdy
 
+#I thought I would just be able to parse the names for their categories "air, jet, naval, fleet, ship, tank", but ofc not. Tiger II RBm 1x1, Steel Legion, Armored Apex... so until I understand better... I'm making basic categories based on the title & an other option.
+def name_categorizer(raw_name):
+    #categories = ['Tank', 'Jet', 'Air', 'Fleet', 'Ship', 'Other'] maybe i should make a list of 
+    category = 'Other'
+    categories = {
+        'Land': ['Tanks', 'Armored' ],
+        'Air': ['Jet', 'Air'],
+        'Sea': ['Ship', 'Fleet']
+        
+    }
+
+    for cat, keywords in categories.items():
+        for keyword in keywords:
+            if keyword in raw_name:
+                category = cat
+                return category
+
+    return category
+
+
 
 def create_tournament_obj(tournament_card):
-
-    detail_id = tournament_card.find_element(By.CSS_SELECTOR, 'a[card-name="buttonInfoTournament"]').get_attribute('href').split("=")[-1]
-
-    """
-        name = models.CharField(max_length=300)
-        start_time = models.DateTimeField()
-        end_time = models.DateTimeField()
-    """
+    #handle datetime formatting
     tournament_date = tournament_card.find_element(By.CSS_SELECTOR, "p[card-name='dayTournament']").text
     t_start, t_end = datetime_converter(tournament_date) #yay dt conversions!
+
+    #handle category based name
+    name = tournament_card.find_element(By.CSS_SELECTOR, 'h3.header-name-tournament').text
+    category = name_categorizer(name)
 
 
 
     data = {
-        'name': tournament_card.find_element(By.CSS_SELECTOR, 'h3.header-name-tournament').text,
+        'name': name,
         'team_size': tournament_card.find_element(By.CSS_SELECTOR, "span[card-name='formatTeam']").text,
+        'category': category,
         #'registrations': tournament_card.find_element(By.CSS_SELECTOR, "span[card-name='countTeam']").text,
         'battle_mode': tournament_card.find_element(By.CSS_SELECTOR, "span[card-name='gameMode']").text,
         'tournament_type': tournament_card.find_element(By.CSS_SELECTOR, "span[card-name='typeTournament']").text,
         'region': tournament_card.find_element(By.CSS_SELECTOR, "span[card-name='clusterTournament']").text,
         'start_time': t_start,
         'end_time': t_end,
-        'detail_id': detail_id
+        'detail_id': tournament_card.find_element(By.CSS_SELECTOR, 'a[card-name="buttonInfoTournament"]').get_attribute('href').split("=")[-1]
     }
 #{'name': 'AB Tanks1x1',  check
 # 'team_size': '1x1',   check
