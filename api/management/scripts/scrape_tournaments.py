@@ -72,8 +72,7 @@ def get_active_tournaments(driver):
 def datetime_converter(raw_datetime_text): # raw input = 'Jul 3, 24, 13:50 UTC - Jul 3, 24, 15:24 UTC'
      datetime_format = '%b %d, %y, %H:%M %Z' 
      cleaned_dt = [dt.strip() for dt in raw_datetime_text.split('-')]    #Ex. ['Jul 3, 24, 13:50 UTC', 'Jul 3, 24, 15:24 UTC']
-    
-     dt_model_rdy = [make_aware(datetime.strptime(dt, datetime_format)) for dt in cleaned_dt]
+     dt_model_rdy = [make_aware(datetime.strptime(dt, datetime_format)) for dt in cleaned_dt] #make aware adds TZ info to the object 
      return dt_model_rdy
 
 
@@ -93,17 +92,23 @@ def create_tournament_obj(tournament_card):
 
     data = {
         'name': tournament_card.find_element(By.CSS_SELECTOR, 'h3.header-name-tournament').text,
-        #'team_size': tournament_card.find_element(By.CSS_SELECTOR, "span[card-name='formatTeam']").text,
+        'team_size': tournament_card.find_element(By.CSS_SELECTOR, "span[card-name='formatTeam']").text,
         #'registrations': tournament_card.find_element(By.CSS_SELECTOR, "span[card-name='countTeam']").text,
-        #'battle_mode': tournament_card.find_element(By.CSS_SELECTOR, "span[card-name='gameMode']").text,
-        #'tournament_type': tournament_card.find_element(By.CSS_SELECTOR, "span[card-name='typeTournament']").text,
-        #'region': tournament_card.find_element(By.CSS_SELECTOR, "span[card-name='clusterTournament']").text,
-        
+        'battle_mode': tournament_card.find_element(By.CSS_SELECTOR, "span[card-name='gameMode']").text,
+        'tournament_type': tournament_card.find_element(By.CSS_SELECTOR, "span[card-name='typeTournament']").text,
+        'region': tournament_card.find_element(By.CSS_SELECTOR, "span[card-name='clusterTournament']").text,
         'start_time': t_start,
         'end_time': t_end,
         'detail_id': detail_id
     }
-#{'name': 'AB Tanks1x1', 'team_size': '1x1', 'registrations': '16/128', 'battle_mode': 'AB', 'tournament_type': 'SE', 'region': 'EU', 'tournament_date': 'Jul 3, 24, 13:50 UTC - Jul 3, 24, 15:24 UTC', 'detail_id': '20024'}
+#{'name': 'AB Tanks1x1',  check
+# 'team_size': '1x1',   check
+# 'registrations': '16/128',  NO
+# 'battle_mode': 'AB', ' Check
+# 'tournament_type': 'SE',  checl
+# 'region': 'EU', check
+# 'tournament_date': 'Jul 3, 24, 13:50 UTC - Jul 3, 24, 15:24 UTC',
+# 'detail_id': '20024'}
     return Tournament(**data)
 
 def get_tournament_details(sub_driver, tournament):

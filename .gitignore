@@ -1,7 +1,7 @@
 # Ignore Python __pycache__ directories
 *.pyc
 __pycache__/
-
+venv/
 # Ignore individual __init__.py files
 **/__init__.py
 
@@ -13,6 +13,6 @@ db.sqlite3
 api/migrations/*.py
 .gitignore
 # Ignore virtual environment
-venv/
+
 
 .DS_Store
