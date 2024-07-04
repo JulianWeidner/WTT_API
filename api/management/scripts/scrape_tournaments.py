@@ -193,7 +193,11 @@ def main():
         #sub_driver = setup_driver()
         tournament
         tourn_obj = create_tournament_obj(tournament)
-        tourn_obj.save()
+        #if the tournament detail id isn't found in the DB, then save it. Otherwise it is a duplicate
+        if  Tournament.objects.filter(detail_id=tourn_obj.detail_id):
+            print("Tournament Already Exists")
+        else: 
+            tourn_obj.save()
         #tourn_detail_elements = get_tournament_details(sub_driver, tourn_obj)
         #tourn_detail_obj = create_tournament_detail(tourn_detail_elements)
 
