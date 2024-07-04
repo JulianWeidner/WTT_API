@@ -10,6 +10,7 @@ import django
 from datetime import datetime
 import time
 
+#this is adding the DRF application program infromation to the script. Allowing the imports of tournament. etc.
 sys.path.append('/Users/julianweidner/Development/DRF/wtt_api')
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'wtt_api.settings')
 django.setup()
@@ -17,10 +18,6 @@ django.setup()
 from api.models import Tournament
 from django.utils.dateparse import parse_datetime
 from django.utils.timezone import make_aware
-
-
-#from tournament import Tournament, TournamentDetail
-
 
 #create driver/browser open page
 def setup_driver():
@@ -69,7 +66,6 @@ def get_active_tournaments(driver):
     #figure out a proper return
     return (active_tournaments)
 
-
 #the dates are just plaintext.. 
 def datetime_converter(raw_datetime_text): # raw input = 'Jul 3, 24, 13:50 UTC - Jul 3, 24, 15:24 UTC'
      datetime_format = '%b %d, %y, %H:%M %Z' 
@@ -96,8 +92,6 @@ def name_categorizer(raw_name):
 
     return category
 
-
-
 def create_tournament_obj(tournament_card):
     #handle datetime formatting
     tournament_date = tournament_card.find_element(By.CSS_SELECTOR, "p[card-name='dayTournament']").text
@@ -106,8 +100,6 @@ def create_tournament_obj(tournament_card):
     #handle category based name
     name = tournament_card.find_element(By.CSS_SELECTOR, 'h3.header-name-tournament').text
     category = name_categorizer(name)
-
-
 
     data = {
         'name': name,
@@ -121,13 +113,14 @@ def create_tournament_obj(tournament_card):
         'end_time': t_end,
         'detail_id': tournament_card.find_element(By.CSS_SELECTOR, 'a[card-name="buttonInfoTournament"]').get_attribute('href').split("=")[-1]
     }
+    #
 #{'name': 'AB Tanks1x1',  check
 # 'team_size': '1x1',   check
 # 'registrations': '16/128',  NO
 # 'battle_mode': 'AB', ' Check
-# 'tournament_type': 'SE',  checl
+# 'tournament_type': 'SE',  check
 # 'region': 'EU', check
-# 'tournament_date': 'Jul 3, 24, 13:50 UTC - Jul 3, 24, 15:24 UTC',
+# 'tournament_date': 'Jul 3, 24, 13:50 UTC - Jul 3, 24, 15:24 UTC', fk me check
 # 'detail_id': '20024'}
     return Tournament(**data)
 
@@ -190,9 +183,10 @@ def main():
 
     print('Creating Tournament Objects (printed from main)')
     for tournament in active_tournaments:
-        #sub_driver = setup_driver()
-        tournament
+    
         tourn_obj = create_tournament_obj(tournament)
+        #this is probably a terrible practice 
+        #move this to the create_tournament_obj func, as that is what is actually creatig the tournament
         #if the tournament detail id isn't found in the DB, then save it. Otherwise it is a duplicate
         if  Tournament.objects.filter(detail_id=tourn_obj.detail_id):
             print("Tournament Already Exists")
