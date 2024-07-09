@@ -9,7 +9,7 @@ class Command(BaseCommand):
         result = subprocess.run(['python', 'api/management/scripts/scrape_tournaments.py'], capture_output=True, text=True)
     
         if result.returncode == 0:
-            self.stdout.write(self.style.SUCCESS('Successfully started fetched tournaments.'))
+            self.stdout.write(self.style.SUCCESS('Successfully started fetch tournaments.'))
             self.stdout.write(result.stdout)
         else:
             self.stdout.write(self.style.ERROR('Failed to fetch tournaments.'))

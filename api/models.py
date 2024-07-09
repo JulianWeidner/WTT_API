@@ -22,7 +22,14 @@ class Tournament(models.Model):
     def __str__(self):
         return self.name #should def have detail id
 
+class TournamentDetail(models.Model):
+    detail_id = models.IntegerField()
+    prize_pool = models.IntegerField()
+    maps = models.JSONField()
+    vehicles = models.JSONField()
 
+    def __str__(self):
+        return str(self.detail_id)
         
     
         
