@@ -8,8 +8,11 @@ class TournamentSerializer(serializers.ModelSerializer):
         exclude = ['id']
 
 class TournamentDetailSerializer(serializers.ModelSerializer):
+    tournament = TournamentSerializer()
     class Meta:
         model = TournamentDetail
         exclude = ['id']
+
+
 
     
