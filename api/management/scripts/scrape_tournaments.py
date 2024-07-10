@@ -109,8 +109,8 @@ def create_tournament_obj(tournament_card):
         'battle_mode': tournament_card.find_element(By.CSS_SELECTOR, "span[card-name='gameMode']").text,
         'tournament_type': tournament_card.find_element(By.CSS_SELECTOR, "span[card-name='typeTournament']").text,
         'region': tournament_card.find_element(By.CSS_SELECTOR, "span[card-name='clusterTournament']").text,
-        'start_time': t_start,
-        'end_time': t_end,
+        'start_date_time': t_start,
+        'end_date_time': t_end,
         'detail_id': tournament_card.find_element(By.CSS_SELECTOR, 'a[card-name="buttonInfoTournament"]').get_attribute('href').split("=")[-1]
     }
     #
@@ -125,13 +125,6 @@ def create_tournament_obj(tournament_card):
 # 'tournament_date': 'Jul 3, 24, 13:50 UTC - Jul 3, 24, 15:24 UTC', fk me check fk me check
 # 'detail_id': '20024'}
     return Tournament(**data)
-
-
-
-def create_tournament_detail(data):
-    return TournamentDetail(**data)
-
-    
 
 def main():
     driver = setup_driver()

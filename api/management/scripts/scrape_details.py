@@ -77,7 +77,12 @@ def create_t_detail_obj(driver):
             'vehicles': nation_vehicles
         }
 
-        TournamentDetail(**data).save()
+        tournament_detail = TournamentDetail(**data)
+        tournament_detail.save()
+
+        linked_tournament = Tournament.objects.get(detail_id=detail_id)
+        linked_tournament.details = tournament_detail
+        linked_tournament.save()
 
 
         #{'id': 20059,
