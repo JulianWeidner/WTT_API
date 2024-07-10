@@ -15,12 +15,15 @@ class TournamentViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
    
 
-  
-
 class TournamentDetailViewSet(viewsets.ModelViewSet):
     queryset = TournamentDetail.objects.all()
     serializer_class = TournamentDetailSerializer
-    lookup_field = 'detail_id'
+    
+    def get_object(self):
+        detail_id = self.kwargs.get('detail_id')
+        t = Tournament.objects.get(detail_id=detail_id)
+        return t.details
+        
 
 
 

@@ -71,7 +71,6 @@ def create_t_detail_obj(driver):
                 nation_vehicles[f'{nation}'] = vehicle_list
     
         data = {
-            'detail_id': detail_id,
             'prize_pool': prize_pool,
             'maps': maps_list,
             'vehicles': nation_vehicles

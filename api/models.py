@@ -20,16 +20,16 @@ class Tournament(models.Model):
         verbose_name = 'tournaments'
 
     def __str__(self):
-        return self.name #should def have detail id
+        return f"{self.detail_id} || {self.name}" #should def have detail id
 
 class TournamentDetail(models.Model):
-    detail_id = models.IntegerField(unique=True)
+    #detail_id = models.IntegerField(unique=True)
     prize_pool = models.IntegerField()
     maps = models.JSONField()
     vehicles = models.JSONField()
 
     def __str__(self):
-        return str(self.detail_id)
+        return f'{self.id} || {self.tournament.name}'
         
     
         
