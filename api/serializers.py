@@ -5,7 +5,7 @@ class TournamentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tournament
         #fields = '__all__'
-        exclude = ['id']
+        exclude = ['id', 'details']
 
 class TournamentDetailSerializer(serializers.ModelSerializer):
     tournament = TournamentSerializer()
